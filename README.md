@@ -65,23 +65,26 @@ Open `http://localhost:5173` on your computer. For testing on phones, local URLs
 
 ## 2. Deploy free-tier version
 
-### Backend on Render
-1. Push this project to a private GitHub repository.
-2. Create a **Web Service** on Render from the repository.
-3. Set **Root Directory** to `backend/ClipBridge.Api`.
-4. Set build command: `dotnet publish -c Release -o out`
-5. Set start command: `dotnet out/ClipBridge.Api.dll`
-6. Add environment variables:
+This repo includes deploy configs:
+- `render.yaml` + `backend/ClipBridge.Api/Dockerfile` for the API on Render
+- `frontend/vercel.json` + `frontend/vite.config.js` for the UI on Vercel
+
+### Backend on Render (Blueprint)
+1. Push this project to GitHub (private repo recommended).
+2. In [Render](https://dashboard.render.com): **New → Blueprint** → connect the repository.
+3. Render reads `render.yaml` and creates **clipbridge-api** (Docker, free plan).
+4. When prompted, set:
    - `CLIP_ACCESS_CODE`: a long random passphrase (do not put it in frontend env)
-   - `FRONTEND_ORIGIN`: your exact Vercel site origin, e.g. `https://clipbridge-yourname.vercel.app`
-   - `ASPNETCORE_ENVIRONMENT`: `Production`
-7. Deploy and copy the Render HTTPS URL, e.g. `https://your-service.onrender.com`.
+   - `FRONTEND_ORIGIN`: leave a placeholder for now (update after Vercel deploy), e.g. `https://example.vercel.app`
+5. Deploy and copy the Render HTTPS URL, e.g. `https://clipbridge-api.onrender.com`.
+
+**Manual alternative (no Blueprint):** New → Web Service → Docker → Root Directory `backend/ClipBridge.Api`, same env vars as above.
 
 Free services may spin down while idle; the first connection can be slow. Confirm the current free-tier limits before relying on it.
 
 ### Frontend on Vercel
-1. Import the repository into Vercel.
-2. Set Root Directory to `frontend`.
+1. Import the repository into [Vercel](https://vercel.com).
+2. Set **Root Directory** to `frontend` (uses `frontend/vercel.json`).
 3. Add environment variable:
    - `VITE_API_URL`: your Render HTTPS URL, without a trailing slash.
 4. Deploy.

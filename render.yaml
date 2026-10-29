@@ -1,0 +1,23 @@
+# Render Blueprint — free-tier ClipBridge API
+# Dashboard: New → Blueprint → connect this repo
+# After deploy, set CLIP_ACCESS_CODE and FRONTEND_ORIGIN in the service env.
+
+services:
+  - type: web
+    name: clipbridge-api
+    runtime: docker
+    plan: free
+    region: oregon
+    rootDir: backend/ClipBridge.Api
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      # Set in the Render dashboard after create (not committed):
+      - key: CLIP_ACCESS_CODE
+        sync: false
+      # Exact Vercel origin, e.g. https://clipbridge-xxx.vercel.app
+      - key: FRONTEND_ORIGIN
+        sync: false
