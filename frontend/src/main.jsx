@@ -49,7 +49,10 @@ function App() {
         if (!cancelled && clip) setLatest(clip);
 
         connection = new HubConnectionBuilder()
-          .withUrl(`${API}/hubs/clipboard`)
+          .withUrl(`${API}/hubs/clipboard`, {
+            // Auth is bearer/Join token, not cookies — avoid credentialed CORS failures.
+            withCredentials: false
+          })
           .withAutomaticReconnect()
           .configureLogging(LogLevel.Error)
           .build();

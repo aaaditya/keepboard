@@ -17,11 +17,19 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         if (frontendOrigin == "*")
+        {
+            // SignalR browsers send credentialed CORS; "*" cannot use AllowCredentials.
+            // Prefer an exact FRONTEND_ORIGIN in production.
             policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        }
         else
+        {
+            // Required for SignalR negotiate (browser defaults withCredentials=true).
             policy.WithOrigins(frontendOrigin.TrimEnd('/'))
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        }
     });
 });
 
